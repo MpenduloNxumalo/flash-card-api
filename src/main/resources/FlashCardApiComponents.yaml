@@ -1,0 +1,23 @@
+components:
+  schemas:
+    Deck:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        cardIds:
+          type: array
+          items:
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/FlashCard'
+
+    FlashCard:
+      type: object
+      properties:
+        id:
+          type: integer
+        front:
+          type: string
+        back:
+          type: string
