@@ -2,15 +2,18 @@ components:
   schemas:
     Deck:
       type: object
+      required:
+        - name
+        - cardIds
       properties:
-        id:
-          type: integer
+        deckId:
+          type: string
         name:
           type: string
         cardIds:
           type: array
           items:
-            $ref: './FlashCardApiComponents.yaml#/components/schemas/FlashCard'
+            type: string
 
     FlashCard:
       type: object
@@ -20,4 +23,18 @@ components:
         front:
           type: string
         back:
+          type: string
+
+    OperationStatus:
+      type: object
+      properties:
+        isSuccessful:
+          type: boolean
+        deckId:
+          type: string
+        flashCardId:
+          type: string
+        error:
+          type: string
+        timestamp:
           type: string

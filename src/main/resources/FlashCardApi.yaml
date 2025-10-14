@@ -29,23 +29,15 @@ paths:
         200:
           description: Deck created successfully
           schema:
-            $ref: './FlashCardApiComponents.yaml#/components/schemas/Deck'
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatus'
         400:
-          description: The submitted id is invalid
+          description: The submitted deck information is invalid
           schema:
             type: object
             properties:
               error:
                 type: string
                 example: "The submitted id is invalid"
-        404:
-          description: The submitted id is not found
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: "The submitted id is not found"
         500:
           description: Internal Server Error
           schema:
@@ -93,7 +85,7 @@ paths:
           name: id
           description: Flash Card Deck id
           required: true
-          type: integer
+          type: string
       responses:
         200:
           description: Success
@@ -183,7 +175,7 @@ paths:
       parameters:
         - in: path
           name: id
-          type: integer
+          type: string
           description: "Flash Card Deck id"
           required: true
         - in: query
@@ -195,7 +187,7 @@ paths:
         200:
           description: Success
           schema:
-            type: string
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatus'
         500:
           description: "Internal Server Error"
           schema:
@@ -232,7 +224,7 @@ paths:
       parameters:
         - in: path
           name: id
-          type: integer
+          type: string
           description: "Flash Card Deck id"
           required: true
         - in: query
@@ -244,7 +236,7 @@ paths:
         200:
           description: Success
           schema:
-            type: string
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatus'
         500:
           description: "Internal Server Error"
           schema:
@@ -281,7 +273,7 @@ paths:
       parameters:
         - in: path
           name: id
-          type: integer
+          type: string
           description: "Flash Card Deck id"
           required: true
         - in: query
@@ -293,7 +285,7 @@ paths:
         200:
           description: Success
           schema:
-            type: string
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatus'
         500:
           description: "Internal Server Error"
           schema:
@@ -334,12 +326,12 @@ paths:
           name: id
           description: "Flash Card Deck id"
           required: true
-          type: integer
+          type: string
       responses:
         200:
           description: Success
           schema:
-            type: string
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatus'
         500:
           description: Internal Server Error
           schema:
@@ -383,7 +375,9 @@ paths:
         200:
           description: Success
           schema:
-            type: string
+            type: array
+            items:
+              $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatus'
         500:
           description: Internal Server Error
           schema:
@@ -408,3 +402,166 @@ paths:
               error:
                 type: string
                 example: "The submitted name is invalid"
+
+  #These are endpoints related to creating the Flash card
+  /createFlashCard/{deckId}:
+    post:
+      summary: Create New Flash Card Deck
+      tags:
+        - "FlashCard"
+      description: Create New Flash Card
+      operationId: createFlashCard
+      parameters:
+        - in: path
+          name: deckId
+          description: "Flash Card Deck id"
+          required: true
+          type: string
+
+        - in: body
+          name: flashCard
+          required: true
+          schema:
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/FlashCard'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatus'
+        404:
+          description: The submitted deck information is invalid
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The submitted id is invalid"
+        500:
+          description: Internal Server Error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Internal Server Error"
+
+  #These are endpoints related to retrieving the Flash card
+  /retrieveAllFlashCards:
+    get:
+      summary: Gets all Flash Cards
+      tags:
+        - "Flash card"
+      description: Get all Flash Cards
+      operationId: retrieveAllFlashCards
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: './FlashCardApiComponents.yaml#/components/schemas/FlashCard'
+        500:
+          description: Internal Server Error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Internal Server Error"
+  /retrieveFlashCardById/{id}:
+    get:
+      summary: Get Flash Card using Flash Card Id
+      tags:
+        - "Flash Card"
+      description: Get Flash Card using Flash Card Id
+      operationId: retrieveFlashCardById
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Flash Card Deck id
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/FlashCard'
+        400:
+          description: The submitted id is invalid
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The submitted id is invalid"
+        404:
+          description: The submitted id is not found
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The submitted id is not found"
+        500:
+          description: Internal Server Error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Internal Server Error"
+  /retrieveFlashCardByName/{name}:
+    get:
+      summary: Get Flash Card using Flash Card name
+      tags:
+        - "Deck"
+      description: Get Flash Card using Flash Card name
+      operationId: retrieveFlashCardByName
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: name
+          description: Flash Card name
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: './FlashCardApiComponents.yaml#/components/schemas/FlashCard'
+        400:
+          description: The submitted name is invalid
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The submitted name is invalid"
+        404:
+          description: The submitted name is not found
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The submitted name is not found"
+        500:
+          description: Internal Server Error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Internal Server Error"

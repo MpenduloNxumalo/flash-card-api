@@ -1,0 +1,131 @@
+{
+  "info": {
+    "name": "FlashCard Deck API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman collection for managing FlashCard Decks."
+  },
+  "item": [
+    {
+      "name": "Create Deck",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"1\",\n  \"name\": \"Sample Deck\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/createDeck",
+          "host": ["{{baseUrl}}"],
+          "path": ["createDeck"]
+        }
+      }
+    },
+    {
+      "name": "Retrieve All Decks",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/retrieveAllDecks",
+          "host": ["{{baseUrl}}"],
+          "path": ["retrieveAllDecks"]
+        }
+      }
+    },
+    {
+      "name": "Retrieve Deck By ID",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/retrieveDeckById/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["retrieveDeckById", ":id"],
+          "variable": [{ "key": "id", "value": "1" }]
+        }
+      }
+    },
+    {
+      "name": "Retrieve Deck By Name",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/retrieveDeckByName/:name",
+          "host": ["{{baseUrl}}"],
+          "path": ["retrieveDeckByName", ":name"],
+          "variable": [{ "key": "name", "value": "Sample Deck" }]
+        }
+      }
+    },
+    {
+      "name": "Update Deck Name By ID",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "{{baseUrl}}/updateDeckNameById/:id?name=UpdatedName",
+          "host": ["{{baseUrl}}"],
+          "path": ["updateDeckNameById", ":id"],
+          "query": [{ "key": "name", "value": "UpdatedName" }],
+          "variable": [{ "key": "id", "value": "1" }]
+        }
+      }
+    },
+    {
+      "name": "Add Card ID To Deck",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "{{baseUrl}}/addCardIdToDeckById/:id?cardId=123",
+          "host": ["{{baseUrl}}"],
+          "path": ["addCardIdToDeckById", ":id"],
+          "query": [{ "key": "cardId", "value": "123" }],
+          "variable": [{ "key": "id", "value": "1" }]
+        }
+      }
+    },
+    {
+      "name": "Delete Card ID From Deck",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "{{baseUrl}}/deleteCardIdToDeckById/:id?cardId=123",
+          "host": ["{{baseUrl}}"],
+          "path": ["deleteCardIdToDeckById", ":id"],
+          "query": [{ "key": "cardId", "value": "123" }],
+          "variable": [{ "key": "id", "value": "1" }]
+        }
+      }
+    },
+    {
+      "name": "Delete Deck By ID",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/deleteDeckById/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["deleteDeckById", ":id"],
+          "variable": [{ "key": "id", "value": "1" }]
+        }
+      }
+    },
+    {
+      "name": "Delete Deck By Name",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/deleteDeckByName/:name",
+          "host": ["{{baseUrl}}"],
+          "path": ["deleteDeckByName", ":name"],
+          "variable": [{ "key": "name", "value": "Sample Deck" }]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ]
+}
