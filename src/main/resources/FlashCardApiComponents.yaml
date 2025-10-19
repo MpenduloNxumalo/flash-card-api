@@ -19,10 +19,37 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
         front:
           type: string
         back:
+          type: string
+
+    ResponseObject:
+      type: object
+      properties:
+        body:
+          type: object
+        error:
+          type: string
+
+    FlashCardResponseObject:
+      type: object
+      properties:
+        body:
+          type: object
+          $ref: '#/components/schemas/FlashCard'
+        error:
+          type: string
+
+    FlashCardListResponseObject:
+      type: object
+      properties:
+        body:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlashCard'
+        error:
           type: string
 
     OperationStatus:

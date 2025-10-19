@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
 @Repository
@@ -41,8 +42,18 @@ public class DeckRepository implements DeckRepositoryInterface {
                 deckList.add(deck);
             }
             return deckList;
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof FirestoreException firestoreEx) {
+                // Handle specific Firestore errors
+                throw new RuntimeException("Firestore error: " + firestoreEx.getCode());
+            }
+            throw new RuntimeException("Error fetching flashcard", e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // restore interrupt flag
+            throw new RuntimeException("Thread interrupted while fetching flashcards", e);
+        } catch (CancellationException e){
+            throw new RuntimeException("Computation was cancelled");
         }
     }
 
@@ -55,8 +66,17 @@ public class DeckRepository implements DeckRepositoryInterface {
                 deck.deckId(doc.get().getId());
             }
             return deck;
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof FirestoreException firestoreEx) {
+                throw new RuntimeException("Firestore error: " + firestoreEx.getCode());
+            }
+            throw new RuntimeException("Error fetching flashcard", e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Thread interrupted while fetching flashcards", e);
+        } catch (CancellationException e){
+            throw new RuntimeException("Computation was cancelled");
         }
     }
 
@@ -65,7 +85,7 @@ public class DeckRepository implements DeckRepositoryInterface {
         try {
             List<Deck> deckList = new ArrayList<>();
             ApiFuture<QuerySnapshot> future = firestore.collection(PATH_NAME_FOR_DECK_COLLECTION)
-                    .whereEqualTo(NAME_FIELD, name).get();
+                    .whereEqualTo(DECK_NAME_FIELD, name).get();
             for (DocumentSnapshot doc : future.get().getDocuments()) {
                 Deck deck = doc.toObject(Deck.class);
                 if (deck != null) {
@@ -74,8 +94,17 @@ public class DeckRepository implements DeckRepositoryInterface {
                 deckList.add(deck);
             }
             return deckList;
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof FirestoreException firestoreEx) {
+                throw new RuntimeException("Firestore error: " + firestoreEx.getCode());
+            }
+            throw new RuntimeException("Error fetching flashcard", e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Thread interrupted while fetching flashcards", e);
+        } catch (CancellationException e){
+            throw new RuntimeException("Computation was cancelled");
         }
     }
 
@@ -114,7 +143,7 @@ public class DeckRepository implements DeckRepositoryInterface {
         try {
             if (firestore.collection(PATH_NAME_FOR_DECK_COLLECTION).document(id).get().get().exists()){
                 Map<String, Object> updates = new HashMap<>();
-                updates.put(NAME_FIELD, name);
+                updates.put(DECK_NAME_FIELD, name);
                 ApiFuture<WriteResult> future = firestore.collection(PATH_NAME_FOR_DECK_COLLECTION).document(id)
                         .update(updates);
                 return future.get().getUpdateTime().toString();
@@ -145,7 +174,7 @@ public class DeckRepository implements DeckRepositoryInterface {
         try {
             List<Map<String,String>> deleteList = new ArrayList<>();
             ApiFuture<QuerySnapshot> querySnapshot = firestore.collection(PATH_NAME_FOR_DECK_COLLECTION)
-                    .whereEqualTo(NAME_FIELD, name).get();
+                    .whereEqualTo(DECK_NAME_FIELD, name).get();
             List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
             if (documents.isEmpty()) {
                 return null;
