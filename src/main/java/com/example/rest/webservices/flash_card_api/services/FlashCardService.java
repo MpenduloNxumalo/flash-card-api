@@ -44,7 +44,7 @@ public class FlashCardService implements FlashCardServiceInterface {
     }
 
     @Override
-    public List<FlashCard> retrieveAllFlashCardsInDeck(String deckId) {
+    public List<FlashCard> retrieveAllFlashCardsInDeck(String deckId) throws NotFoundException {
         return repository.retrieveAllFlashCardsInDeck(deckId);
     }
 

@@ -5,6 +5,7 @@ import com.example.rest.webservices.flash_card_api.models.FlashCard;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,8 @@ import java.util.concurrent.ExecutionException;
 import static com.example.rest.webservices.flash_card_api.repositories.repository_interfaces.FlashCardRepositoryInterface.PATH_NAME_FOR_FLASH_CARD_COLLECTION;
 
 public final class FlashCardRepositoryUtil {
-    public static List<FlashCard> getFlashCardsList(List<FlashCard> flashCardList, ApiFuture<QuerySnapshot> future) throws InterruptedException, ExecutionException {
+    public static List<FlashCard> getFlashCardsList(ApiFuture<QuerySnapshot> future) throws InterruptedException, ExecutionException {
+        List<FlashCard> flashCardList = new ArrayList<>();
         QuerySnapshot snapshot = future.get();
         if (snapshot == null || snapshot.isEmpty()) {
             return flashCardList;

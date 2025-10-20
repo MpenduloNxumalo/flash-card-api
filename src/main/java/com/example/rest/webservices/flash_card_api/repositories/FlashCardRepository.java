@@ -9,10 +9,9 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
@@ -29,7 +28,13 @@ public class FlashCardRepository implements FlashCardRepositoryInterface {
         }
         try {
             ApiFuture<DocumentReference> flashCards = firestore.collection(PATH_NAME_FOR_FLASH_CARD_COLLECTION).add(flashCard);
-            return flashCards.get().getId();
+            DocumentReference documentReference = flashCards.get();
+            String flashCardId = documentReference.getId();
+            if (!flashCardId.isEmpty() || flashCardId != null) {
+                return flashCardId;
+            } else {
+                throw new RuntimeException("Error in creating new flash card. Flash Card Id returned empty or null");
+            }
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof FirestoreException firestoreEx) {
@@ -44,11 +49,10 @@ public class FlashCardRepository implements FlashCardRepositoryInterface {
     }
 
     @Override
-    public List<FlashCard> retrieveAllFlashCards(){
+    public List<FlashCard> retrieveAllFlashCards() {
         try {
-            List<FlashCard> flashCardList = new ArrayList<>();
             ApiFuture<QuerySnapshot> future = firestore.collection(PATH_NAME_FOR_FLASH_CARD_COLLECTION).get();
-            return FlashCardRepositoryUtil.getFlashCardsList(flashCardList, future);
+            return FlashCardRepositoryUtil.getFlashCardsList(future);
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof FirestoreException firestoreEx) {
@@ -77,7 +81,7 @@ public class FlashCardRepository implements FlashCardRepositoryInterface {
             if (flashCard != null) {
                 flashCard.id(snapshot.getId());
                 return flashCard;
-            } else{
+            } else {
                 return new FlashCard();
             }
         } catch (ExecutionException e) {
@@ -90,7 +94,7 @@ public class FlashCardRepository implements FlashCardRepositoryInterface {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt(); // restore interrupt flag
             throw new RuntimeException("Thread interrupted while fetching flashcards", e);
-        } catch (CancellationException e){
+        } catch (CancellationException e) {
             throw new RuntimeException("Computation was cancelled");
         }
     }
@@ -98,10 +102,9 @@ public class FlashCardRepository implements FlashCardRepositoryInterface {
     @Override
     public List<FlashCard> retrieveFlashCardByName(String name) {
         try {
-            List<FlashCard> flashCardList = new ArrayList<>();
             ApiFuture<QuerySnapshot> future = firestore.collection(PATH_NAME_FOR_FLASH_CARD_COLLECTION)
                     .whereEqualTo(FLASHCARD_TITLE_FIELD, name).get();
-            return FlashCardRepositoryUtil.getFlashCardsList(flashCardList, future);
+            return FlashCardRepositoryUtil.getFlashCardsList(future);
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof FirestoreException firestoreEx) {
@@ -111,14 +114,14 @@ public class FlashCardRepository implements FlashCardRepositoryInterface {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new RuntimeException("Thread interrupted while fetching flashcards", e);
-        } catch (CancellationException e){
+        } catch (CancellationException e) {
             throw new RuntimeException("Computation was cancelled");
         }
     }
 
     @Override
-    public List<FlashCard> retrieveAllFlashCardsInDeck(String deckId) {
-        try{
+    public List<FlashCard> retrieveAllFlashCardsInDeck(String deckId) throws NotFoundException {
+        try {
             Deck deck = deckRepository.retrieveDeckById(deckId);
             List<FlashCard> flashCardList = new ArrayList<>();
             if (deck == null) {
@@ -136,7 +139,7 @@ public class FlashCardRepository implements FlashCardRepositoryInterface {
                 }
             }
             return flashCardList;
-        } catch (RuntimeException e){
+        } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -154,11 +157,11 @@ public class FlashCardRepository implements FlashCardRepositoryInterface {
     @Override
     public String deleteFlashCardById(String flashcardId) throws NotFoundException {
         try {
-            if (firestore.collection(PATH_NAME_FOR_FLASH_CARD_COLLECTION).document(flashcardId).get().get().exists()){
+            if (firestore.collection(PATH_NAME_FOR_FLASH_CARD_COLLECTION).document(flashcardId).get().get().exists()) {
                 ApiFuture<WriteResult> future = firestore.collection(PATH_NAME_FOR_FLASH_CARD_COLLECTION).document(flashcardId).delete();
                 return future.get().getUpdateTime().toString();
             } else {
-                throw new NotFoundException(String.format("Id: %s does not exist",flashcardId));
+                throw new NotFoundException(String.format("Id: %s does not exist", flashcardId));
             }
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
@@ -169,9 +172,8 @@ public class FlashCardRepository implements FlashCardRepositoryInterface {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new RuntimeException("Thread interrupted while fetching flashcards", e);
-        } catch (CancellationException e){
+        } catch (CancellationException e) {
             throw new RuntimeException("Computation was cancelled");
         }
     }
-
 }

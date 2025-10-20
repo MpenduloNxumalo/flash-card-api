@@ -61,7 +61,7 @@ paths:
           description: Success
           schema:
             type: object
-            $ref: './FlashCardApiComponents.yaml#/components/schemas/ResponseObject'
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/DeckListResponseObject'
         500:
           description: Internal Server Error
           schema:
@@ -90,7 +90,7 @@ paths:
           description: Success
           schema:
             type: object
-            $ref: './FlashCardApiComponents.yaml#/components/schemas/ResponseObject'
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/DeckResponseObject'
         400:
           description: The submitted id is invalid
           schema:
@@ -135,7 +135,7 @@ paths:
           description: Success
           schema:
             type: object
-            $ref: './FlashCardApiComponents.yaml#/components/schemas/ResponseObject'
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/DeckListResponseObject'
         400:
           description: The submitted name is invalid
           schema:
@@ -374,9 +374,8 @@ paths:
         200:
           description: Success
           schema:
-            type: array
-            items:
-              $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatus'
+            type: object
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatusListResponseObject'
         500:
           description: Internal Server Error
           schema:
