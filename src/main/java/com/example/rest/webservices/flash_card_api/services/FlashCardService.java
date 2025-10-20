@@ -15,13 +15,10 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class FlashCardService implements FlashCardServiceInterface {
     private FlashCardRepository repository;
-    private final DeckService deckService;
 
-    public FlashCardService(FlashCardRepository repository, DeckService deckService) {
+    public FlashCardService(FlashCardRepository repository) {
         this.repository = repository;
-        this.deckService = deckService;
     }
-
 
     @Override
     public String createFlashCard(String deckId, FlashCard body) {
