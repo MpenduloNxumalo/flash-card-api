@@ -2,7 +2,6 @@ package com.example.rest.webservices.flash_card_api.repositories;
 
 import com.example.rest.webservices.flash_card_api.models.FlashCard;
 import com.google.api.core.ApiFuture;
-import com.google.cloud.BaseServiceException;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
@@ -42,17 +41,15 @@ class FlashCardRepositoryTests {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-
     }
 
     @Test
-    void testCreateFlashCardWhenFlashCardArgIsNull(){
-
-        RuntimeException exception = assertThrows(RuntimeException.class, () ->{
+    void testCreateFlashCardWhenFlashCardArgIsNull() {
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             repository.createFlashCard(null);
         });
 
-        assertEquals("Flash card argument is null",exception.getMessage());
+        assertEquals("Flash card argument is null", exception.getMessage());
     }
 
     @Test
@@ -74,19 +71,15 @@ class FlashCardRepositoryTests {
     @Test
     void testCreateFlashCardThrowsFirestoreException() throws Exception {
         FlashCard flashCard = new FlashCard().front("front").back("back");
-
         FirestoreException firestoreEx = mock(FirestoreException.class);
-        when(firestoreEx.getCode()).thenReturn(Status.ABORTED.getCode().value());
-
         ExecutionException execEx = new ExecutionException(firestoreEx);
 
+        when(firestoreEx.getCode()).thenReturn(Status.ABORTED.getCode().value());
         when(firestore.collection(anyString())).thenReturn(collectionReference);
         when(collectionReference.add(flashCard)).thenReturn(apiFuture);
         when(apiFuture.get()).thenThrow(execEx);
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () ->
-                repository.createFlashCard(flashCard)
-        );
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> repository.createFlashCard(flashCard));
 
         assertTrue(exception.getMessage().contains("Firestore error:"));
     }
@@ -99,12 +92,8 @@ class FlashCardRepositoryTests {
         when(collectionReference.add(flashCard)).thenReturn(apiFuture);
         when(apiFuture.get()).thenThrow(new InterruptedException());
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () ->
-                repository.createFlashCard(flashCard)
-        );
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> repository.createFlashCard(flashCard));
 
         assertTrue(exception.getMessage().contains("Thread interrupted while fetching flashcards"));
     }
-
-
 }

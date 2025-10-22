@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Service
 public class DeckService implements DeckServiceInterface {
-    private DeckRepository repository;
+    private final DeckRepository repository;
 
     public DeckService(DeckRepository repository) {
         this.repository = repository;

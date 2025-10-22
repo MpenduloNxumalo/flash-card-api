@@ -10,5 +10,5 @@ public interface FlashCardApi extends
         RetrieveAllFlashCardsInDeckApi,
         UpdateFlashCardTitleByIdApi,
         UpdateFlashCardContentByIdApi,
-        DeleteFlashCardByIdApi{
+        DeleteFlashCardByIdApi {
 }

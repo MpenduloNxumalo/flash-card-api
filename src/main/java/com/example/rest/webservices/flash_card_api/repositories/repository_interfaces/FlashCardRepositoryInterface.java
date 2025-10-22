@@ -2,7 +2,6 @@ package com.example.rest.webservices.flash_card_api.repositories.repository_inte
 
 import com.example.rest.webservices.flash_card_api.exceptions.NotFoundException;
 import com.example.rest.webservices.flash_card_api.models.FlashCard;
-
 import java.util.List;
 
 public interface FlashCardRepositoryInterface {
@@ -11,12 +10,18 @@ public interface FlashCardRepositoryInterface {
     String FLASHCARD_CONTENT_FIELD = "back";
 
     String createFlashCard(FlashCard flashCard);
+
     List<FlashCard> retrieveAllFlashCards();
+
     FlashCard retrieveFlashCardById(String id);
+
     List<FlashCard> retrieveFlashCardByName(String name);
+
     List<FlashCard> retrieveAllFlashCardsInDeck(String deckId) throws NotFoundException;
+
     String updateFlashCardTitleById(String id, String title) throws NotFoundException;
 
     String updateFlashCardContentById(String id, String content) throws NotFoundException;
+
     String deleteFlashCardById(String flashcardId) throws NotFoundException;
 }

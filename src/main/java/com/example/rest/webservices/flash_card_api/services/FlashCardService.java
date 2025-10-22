@@ -2,19 +2,15 @@ package com.example.rest.webservices.flash_card_api.services;
 
 import com.example.rest.webservices.flash_card_api.exceptions.NotFoundException;
 import com.example.rest.webservices.flash_card_api.models.FlashCard;
-import com.example.rest.webservices.flash_card_api.models.OperationStatus;
 import com.example.rest.webservices.flash_card_api.repositories.FlashCardRepository;
 import com.example.rest.webservices.flash_card_api.services.service_interfaces.FlashCardServiceInterface;
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.WriteResult;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 @Service
 public class FlashCardService implements FlashCardServiceInterface {
-    private FlashCardRepository repository;
+    private final FlashCardRepository repository;
 
     public FlashCardService(FlashCardRepository repository) {
         this.repository = repository;
