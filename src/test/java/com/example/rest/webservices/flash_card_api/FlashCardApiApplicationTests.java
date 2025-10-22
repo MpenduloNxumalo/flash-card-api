@@ -8,6 +8,7 @@ class FlashCardApiApplicationTests {
 
 	@Test
 	void contextLoads() {
+
 	}
 
 }
