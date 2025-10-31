@@ -7,16 +7,25 @@ import java.util.List;
 import java.util.Map;
 
 public interface DeckRepositoryInterface {
-    String PATH_NAME_FOR_DECK_COLLECTION = "Deck";
-    String DECK_NAME_FIELD = "name";
-    String CARD_ID_FIELD = "cardIds";
-    String createDeck(Deck deck);
-    List<Deck> retrieveAllDecks();
-    Deck retrieveDeckById(String id) throws NotFoundException;
-    List<Deck> retrieveDeckByName(String name) throws NotFoundException;
-    String addCardIdToDeckById(String id, String cardId) throws NotFoundException;
-    String deleteCardIdFromDeckById(String id, String cardId) throws NotFoundException;
-    String updateDeckNameById(String id, String name) throws NotFoundException;
-    String deleteDeckById(String id) throws NotFoundException;
-    List<Map<String,String>> deleteDeckByName(String name) throws NotFoundException;
+  String PATH_NAME_FOR_DECK_COLLECTION = "Deck";
+  String DECK_NAME_FIELD = "name";
+  String CARD_ID_FIELD = "cardIds";
+
+  String createDeck(Deck deck);
+
+  List<Deck> retrieveAllDecks();
+
+  Deck retrieveDeckById(String id) throws NotFoundException;
+
+  List<Deck> retrieveDeckByName(String name) throws NotFoundException;
+
+  String addCardIdToDeckById(String id, String cardId) throws NotFoundException;
+
+  String deleteCardIdFromDeckById(String id, String cardId) throws NotFoundException;
+
+  String updateDeckNameById(String id, String name) throws NotFoundException;
+
+  String deleteDeckById(String id) throws NotFoundException;
+
+  List<Map<String, String>> deleteDeckByName(String name) throws NotFoundException;
 }

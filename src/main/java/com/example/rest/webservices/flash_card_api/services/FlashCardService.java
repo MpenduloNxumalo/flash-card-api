@@ -10,49 +10,49 @@ import java.util.List;
 
 @Service
 public class FlashCardService implements FlashCardServiceInterface {
-    private final FlashCardRepository repository;
+  private final FlashCardRepository repository;
 
-    public FlashCardService(FlashCardRepository repository) {
-        this.repository = repository;
-    }
+  public FlashCardService(FlashCardRepository repository) {
+    this.repository = repository;
+  }
 
-    @Override
-    public String createFlashCard(String deckId, FlashCard body) {
-        return repository.createFlashCard(body);
-    }
+  @Override
+  public String createFlashCard(String deckId, FlashCard body) {
+    return repository.createFlashCard(body);
+  }
 
-    @Override
-    public List<FlashCard> retrieveAllFlashCards() {
-        return repository.retrieveAllFlashCards();
-    }
+  @Override
+  public List<FlashCard> retrieveAllFlashCards() {
+    return repository.retrieveAllFlashCards();
+  }
 
-    @Override
-    public FlashCard retrieveFlashCardById(String id) {
-        return repository.retrieveFlashCardById(id);
-    }
+  @Override
+  public FlashCard retrieveFlashCardById(String id) {
+    return repository.retrieveFlashCardById(id);
+  }
 
-    @Override
-    public List<FlashCard> retrieveFlashCardByName(String name) {
-        return repository.retrieveFlashCardByName(name);
-    }
+  @Override
+  public List<FlashCard> retrieveFlashCardByName(String name) {
+    return repository.retrieveFlashCardByName(name);
+  }
 
-    @Override
-    public List<FlashCard> retrieveAllFlashCardsInDeck(String deckId) throws NotFoundException {
-        return repository.retrieveAllFlashCardsInDeck(deckId);
-    }
+  @Override
+  public List<FlashCard> retrieveAllFlashCardsInDeck(String deckId) throws NotFoundException {
+    return repository.retrieveAllFlashCardsInDeck(deckId);
+  }
 
-    @Override
-    public String updateFlashCardTitleById(String id, String title) throws NotFoundException {
-        return repository.updateFlashCardTitleById(id, title);
-    }
+  @Override
+  public String updateFlashCardTitleById(String id, String title) throws NotFoundException {
+    return repository.updateFlashCardTitleById(id, title);
+  }
 
-    @Override
-    public String updateFlashCardContentById(String id, String content) throws NotFoundException {
-        return repository.updateFlashCardContentById(id, content);
-    }
+  @Override
+  public String updateFlashCardContentById(String id, String content) throws NotFoundException {
+    return repository.updateFlashCardContentById(id, content);
+  }
 
-    @Override
-    public String deleteFlashCardById(String flashcardId) throws NotFoundException {
-        return repository.deleteFlashCardById(flashcardId);
-    }
+  @Override
+  public String deleteFlashCardById(String flashcardId) throws NotFoundException {
+    return repository.deleteFlashCardById(flashcardId);
+  }
 }
