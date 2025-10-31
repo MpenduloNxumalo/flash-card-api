@@ -23,6 +23,9 @@ public class DeckRepository implements DeckRepositoryInterface {
 
     @Override
     public String createDeck(Deck deck) {
+        if (deck == null) {
+            throw new RuntimeException("Deck argument is null");
+        }
         try {
             ApiFuture<DocumentReference> decks = firestore.collection(PATH_NAME_FOR_DECK_COLLECTION).add(deck);
             return decks.get().getId();
@@ -34,12 +37,13 @@ public class DeckRepository implements DeckRepositoryInterface {
             throw new RuntimeException("Error fetching flashcard", e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException("Thread interrupted while fetching flashcards", e);
+            throw new RuntimeException("Thread interrupted while creating decks", e);
         } catch (CancellationException e) {
             throw new RuntimeException("Computation was cancelled");
         }
     }
 
+    @Override
     public List<Deck> retrieveAllDecks() {
         try {
             List<Deck> deckList = new ArrayList<>();
@@ -58,10 +62,10 @@ public class DeckRepository implements DeckRepositoryInterface {
                 // Handle specific Firestore errors
                 throw new RuntimeException("Firestore error: " + firestoreEx.getCode());
             }
-            throw new RuntimeException("Error fetching flashcard", e);
+            throw new RuntimeException("Error fetching Deck", e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt(); // restore interrupt flag
-            throw new RuntimeException("Thread interrupted while fetching flashcards", e);
+            throw new RuntimeException("Thread interrupted while fetching decks", e);
         } catch (CancellationException e) {
             throw new RuntimeException("Computation was cancelled");
         }
@@ -87,10 +91,10 @@ public class DeckRepository implements DeckRepositoryInterface {
             if (cause instanceof FirestoreException firestoreEx) {
                 throw new RuntimeException("Firestore error: " + firestoreEx.getCode());
             }
-            throw new RuntimeException("Error fetching flashcard", e);
+            throw new RuntimeException("Error fetching Deck", e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException("Thread interrupted while fetching flashcards", e);
+            throw new RuntimeException("Thread interrupted while fetching deck", e);
         } catch (CancellationException e) {
             throw new RuntimeException("Computation was cancelled");
         }
@@ -100,10 +104,10 @@ public class DeckRepository implements DeckRepositoryInterface {
     public List<Deck> retrieveDeckByName(String name) throws NotFoundException {
         try {
             List<Deck> deckList = new ArrayList<>();
-            ApiFuture<QuerySnapshot> future = firestore.collection(PATH_NAME_FOR_DECK_COLLECTION)
-                    .whereEqualTo(DECK_NAME_FIELD, name).get();
+            ApiFuture<QuerySnapshot> future = firestore.collection(PATH_NAME_FOR_DECK_COLLECTION).whereEqualTo(DECK_NAME_FIELD, name).get();
 
-            for (DocumentSnapshot doc : future.get().getDocuments()) {
+            QuerySnapshot snapshot = future.get();
+            for (DocumentSnapshot doc : snapshot.getDocuments()) {
                 Deck deck = doc.toObject(Deck.class);
                 if (deck != null) {
                     deck.deckId(doc.getId());
@@ -123,10 +127,10 @@ public class DeckRepository implements DeckRepositoryInterface {
             if (cause instanceof FirestoreException firestoreEx) {
                 throw new RuntimeException("Firestore error: " + firestoreEx.getCode());
             }
-            throw new RuntimeException("Error fetching flashcard", e);
+            throw new RuntimeException("Error fetching decks", e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException("Thread interrupted while fetching flashcards", e);
+            throw new RuntimeException("Thread interrupted while fetching decks", e);
         } catch (CancellationException e) {
             throw new RuntimeException("Computation was cancelled");
         }
@@ -148,10 +152,10 @@ public class DeckRepository implements DeckRepositoryInterface {
             if (cause instanceof FirestoreException firestoreEx) {
                 throw new RuntimeException("Firestore error: " + firestoreEx.getCode());
             }
-            throw new RuntimeException("Error fetching flashcard", e);
+            throw new RuntimeException("Error updating deck", e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException("Thread interrupted while fetching flashcards", e);
+            throw new RuntimeException("Thread interrupted while updating decks", e);
         } catch (CancellationException e) {
             throw new RuntimeException("Computation was cancelled");
         }
@@ -176,7 +180,7 @@ public class DeckRepository implements DeckRepositoryInterface {
             throw new RuntimeException("Error fetching flashcard", e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException("Thread interrupted while fetching flashcards", e);
+            throw new RuntimeException("Thread interrupted while updating decks", e);
         } catch (CancellationException e) {
             throw new RuntimeException("Computation was cancelled");
         }
@@ -202,7 +206,7 @@ public class DeckRepository implements DeckRepositoryInterface {
             throw new RuntimeException("Error fetching flashcard", e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException("Thread interrupted while fetching flashcards", e);
+            throw new RuntimeException("Thread interrupted while updating decks", e);
         } catch (CancellationException e) {
             throw new RuntimeException("Computation was cancelled");
         }
@@ -213,7 +217,8 @@ public class DeckRepository implements DeckRepositoryInterface {
         try {
             if (firestore.collection(PATH_NAME_FOR_DECK_COLLECTION).document(id).get().get().exists()) {
                 ApiFuture<WriteResult> future = firestore.collection(PATH_NAME_FOR_DECK_COLLECTION).document(id).delete();
-                return future.get().getUpdateTime().toString();
+                WriteResult writeResult = future.get();
+                return writeResult.getUpdateTime().toString();
             } else {
                 throw new NotFoundException(String.format("Deck Id: %s does not exist", id));
             }
@@ -225,7 +230,7 @@ public class DeckRepository implements DeckRepositoryInterface {
             throw new RuntimeException("Error fetching flashcard", e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException("Thread interrupted while fetching flashcards", e);
+            throw new RuntimeException("Thread interrupted while deleting decks", e);
         } catch (CancellationException e) {
             throw new RuntimeException("Computation was cancelled");
         }
@@ -255,7 +260,7 @@ public class DeckRepository implements DeckRepositoryInterface {
             throw new RuntimeException("Error fetching flashcard", e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException("Thread interrupted while fetching flashcards", e);
+            throw new RuntimeException("Thread interrupted while deleting decks", e);
         } catch (CancellationException e) {
             throw new RuntimeException("Computation was cancelled");
         }
