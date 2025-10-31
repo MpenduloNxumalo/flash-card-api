@@ -29,23 +29,15 @@ paths:
         200:
           description: Deck created successfully
           schema:
-            $ref: './FlashCardApiComponents.yaml#/components/schemas/Deck'
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatus'
         400:
-          description: The submitted id is invalid
+          description: The submitted deck information is invalid
           schema:
             type: object
             properties:
               error:
                 type: string
                 example: "The submitted id is invalid"
-        404:
-          description: The submitted id is not found
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: "The submitted id is not found"
         500:
           description: Internal Server Error
           schema:
@@ -68,9 +60,8 @@ paths:
         200:
           description: Success
           schema:
-            type: array
-            items:
-              $ref: './FlashCardApiComponents.yaml#/components/schemas/Deck'
+            type: object
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/DeckListResponseObject'
         500:
           description: Internal Server Error
           schema:
@@ -93,12 +84,13 @@ paths:
           name: id
           description: Flash Card Deck id
           required: true
-          type: integer
+          type: string
       responses:
         200:
           description: Success
           schema:
-            $ref: './FlashCardApiComponents.yaml#/components/schemas/Deck'
+            type: object
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/DeckResponseObject'
         400:
           description: The submitted id is invalid
           schema:
@@ -142,9 +134,8 @@ paths:
         200:
           description: Success
           schema:
-            type: array
-            items:
-              $ref: './FlashCardApiComponents.yaml#/components/schemas/Deck'
+            type: object
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/DeckListResponseObject'
         400:
           description: The submitted name is invalid
           schema:
@@ -183,7 +174,7 @@ paths:
       parameters:
         - in: path
           name: id
-          type: integer
+          type: string
           description: "Flash Card Deck id"
           required: true
         - in: query
@@ -195,7 +186,7 @@ paths:
         200:
           description: Success
           schema:
-            type: string
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatus'
         500:
           description: "Internal Server Error"
           schema:
@@ -232,7 +223,7 @@ paths:
       parameters:
         - in: path
           name: id
-          type: integer
+          type: string
           description: "Flash Card Deck id"
           required: true
         - in: query
@@ -244,7 +235,7 @@ paths:
         200:
           description: Success
           schema:
-            type: string
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatus'
         500:
           description: "Internal Server Error"
           schema:
@@ -281,8 +272,8 @@ paths:
       parameters:
         - in: path
           name: id
-          type: integer
-          description: "Flash Card Deck id"
+          type: string
+          description: "Deck Id"
           required: true
         - in: query
           name: cardId
@@ -293,7 +284,7 @@ paths:
         200:
           description: Success
           schema:
-            type: string
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatus'
         500:
           description: "Internal Server Error"
           schema:
@@ -321,7 +312,7 @@ paths:
 
   #These are endpoints related to deleting the Deck
   /deleteDeckById/{id}:
-    get:
+    delete:
       summary: Delete the Flash Card Deck using Deck Id
       tags:
         - "Deck"
@@ -334,12 +325,12 @@ paths:
           name: id
           description: "Flash Card Deck id"
           required: true
-          type: integer
+          type: string
       responses:
         200:
           description: Success
           schema:
-            type: string
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatus'
         500:
           description: Internal Server Error
           schema:
@@ -365,7 +356,7 @@ paths:
                 type: string
                 example: "The submitted id is invalid"
   /deleteDeckByName/{name}:
-    get:
+    delete:
       summary: Delete Flash Card Deck using Deck name
       tags:
         - "Deck"
@@ -383,7 +374,8 @@ paths:
         200:
           description: Success
           schema:
-            type: string
+            type: object
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatusListResponseObject'
         500:
           description: Internal Server Error
           schema:
@@ -408,3 +400,360 @@ paths:
               error:
                 type: string
                 example: "The submitted name is invalid"
+
+  #These are endpoints related to creating the Flash card
+  /createFlashCard/{deckId}:
+    post:
+      summary: Create New Flash Card Deck
+      tags:
+        - "FlashCard"
+      description: Create New Flash Card
+      operationId: createFlashCard
+      parameters:
+        - in: path
+          name: deckId
+          description: "Flash Card Deck id"
+          required: true
+          type: string
+
+        - in: body
+          name: flashCard
+          required: true
+          schema:
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/FlashCard'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatus'
+        404:
+          description: The submitted deck information is invalid
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The submitted id is invalid"
+        500:
+          description: Internal Server Error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Internal Server Error"
+
+  #These are endpoints related to retrieving the Flash card
+  /retrieveAllFlashCards:
+    get:
+      summary: Gets all Flash Cards
+      tags:
+        - "Flash card"
+      description: Get all Flash Cards
+      operationId: retrieveAllFlashCards
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/FlashCardListResponseObject'
+        500:
+          description: Internal Server Error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Internal Server Error"
+  /retrieveFlashCardById/{id}:
+    get:
+      summary: Get Flash Card using Flash Card Id
+      tags:
+        - "Flash Card"
+      description: Get Flash Card using Flash Card Id
+      operationId: retrieveFlashCardById
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Flash Card id
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/FlashCardResponseObject'
+        400:
+          description: The submitted id is invalid
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The submitted id is invalid"
+        404:
+          description: The submitted id is not found
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The submitted id is not found"
+        500:
+          description: Internal Server Error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Internal Server Error"
+  /retrieveAllFlashCardsInDeck/{deckId}:
+    get:
+      summary: Get Flash Cards in Deck
+      tags:
+        - "Flash Card"
+      description: Get Flash Cards in Deck
+      operationId: retrieveAllFlashCardsInDeck
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: deckId
+          description: Flash Card Deck id
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/FlashCardListResponseObject'
+        400:
+          description: The submitted id is invalid
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The submitted id is invalid"
+        404:
+          description: The submitted id is not found
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The submitted id is not found"
+        500:
+          description: Internal Server Error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Internal Server Error"
+  /retrieveFlashCardByName/{name}:
+    get:
+      summary: Get Flash Card using Flash Card name
+      tags:
+        - "Flash card"
+      description: Get Flash Card using Flash Card name
+      operationId: retrieveFlashCardByName
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: name
+          description: Flash Card name
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/FlashCardListResponseObject'
+        400:
+          description: The submitted name is invalid
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The submitted name is invalid"
+        404:
+          description: The submitted name is not found
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The submitted name is not found"
+        500:
+          description: Internal Server Error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Internal Server Error"
+
+  #These are endpoints related to updating the Flash card
+  /updateFlashCardTitleById/{id}:
+    patch:
+      summary: Update Flash Card title using Flash card Id
+      tags:
+        - "Flash card"
+      description: Update Flash Card Title using Flash card Id
+      operationId: updateFlashCardTitleById
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: "Flash Card id"
+          required: true
+        - in: query
+          name: title
+          type: string
+          description: "The title that the Flash Card title is updated to"
+          required: true
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatus'
+        500:
+          description: "Internal Server Error"
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Internal Server Error"
+        404:
+          description: "The submitted id is not found"
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The submitted id is not found"
+        400:
+          description: "The submitted id is invalid"
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The submitted id is invalid"
+  /updateFlashCardContentById/{id}:
+    patch:
+      summary: Update Flash Card content using Flash card Id
+      tags:
+        - "Flash card"
+      description: Update Flash Card content using Flash card Id
+      operationId: updateFlashCardContentById
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: "Flash Card id"
+          required: true
+        - in: query
+          name: content
+          type: string
+          description: "The content that the Flash Card content is updated to"
+          required: true
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatus'
+        500:
+          description: "Internal Server Error"
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Internal Server Error"
+        404:
+          description: "The submitted id is not found"
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The submitted id is not found"
+        400:
+          description: "The submitted id is invalid"
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The submitted id is invalid"
+
+  #These are endpoints related to deleting the Flash card
+  /deleteFlashCardById/{id}:
+    delete:
+      summary: Delete the Flash Card using Flash Card Id
+      tags:
+        - "Flash Card"
+      description: Delete the Flash Card using Flash Card Id
+      operationId: deleteFlashCardById
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: flashcardId
+          description: "Flash Card id"
+          required: true
+          type: string
+
+        - in: query
+          name: deckId
+          description: "Deck id"
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: './FlashCardApiComponents.yaml#/components/schemas/OperationStatus'
+        500:
+          description: Internal Server Error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Internal Server Error"
+        404:
+          description: The submitted id is not found
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The submitted id is not found"
+        400:
+          description: The submitted id is invalid
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The submitted id is invalid"
